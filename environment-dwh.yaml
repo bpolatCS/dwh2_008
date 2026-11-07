@@ -1,0 +1,15 @@
+name: dwh
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - pandas
+  - sqlalchemy
+  - sqlparse
+  - psycopg2-binary
+  - jupyterlab
+  - ipykernel
+  - pip
+  - pip:
+      - atoti==6.2.2

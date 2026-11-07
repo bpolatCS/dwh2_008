@@ -1,0 +1,9 @@
+id,modename,latency,validfrom,validto,details
+1001,"Rapid",1,"2023-01-01","2023-12-31","Minimal delay, suitable for real-time alerts"
+1002,"Low Power",2,"2023-01-01","2023-12-31","Reduced energy use, suitable for remote sensors"
+1003,"Standard",5,"2023-01-01","2023-12-31","Balanced mode for general-purpose monitoring"
+1004,"High Precision",10,"2023-01-01","2023-12-31","Uses advanced filtering for high accuracy"
+1005,"Rapid",1,"2024-01-01","\N","Minimal delay, suitable for real-time alerts"
+1006,"Low Power",2,"2024-01-01","\N","Reduced energy use, suitable for remote sensors"
+1007,"Standard",5,"2024-01-01","\N","Balanced mode for general-purpose monitoring"
+1008,"High Precision",10,"2024-01-01","\N","Uses advanced filtering for high accuracy"

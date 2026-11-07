@@ -1,0 +1,53 @@
+-- Assignment 2 | ETL 06/06 | Fact-table ETL (STUDENT TODO)
+-- Target: ft_param_city_month_location
+--
+-- ETL 01-05 are supplied and load the five dimensions during a full run.
+-- Implement this SQL file yourself in DBeaver. Do not modify the supplied DDL.
+--
+-- Grain: one fact row per Month x City x Parameter x Location Type.
+-- The monthly Peak Alert Level is a derived attribute, NOT part of this grain.
+--
+-- Your implementation must:
+--   1. Read the relevant staging tables and classify individual readings
+--      using the parameter-specific alert thresholds.
+--   2. Aggregate readings and all fact measures at the specified grain.
+--      Count DISTINCT calendar dates for the two day measures.
+--   3. Determine each month's highest alert level, resolve the five
+--      dimension keys, and insert the resulting fact rows.
+--
+-- Use unqualified table names only; the notebook supplies the search path.
+-- Do not insert example/dummy rows into the warehouse.
+--
+-- This starter contains COMMENTS ONLY on purpose. The notebook creates your
+-- assigned SQL question files and feasibility CSV on the first run, then
+-- stops BEFORE resetting database schemas until you implement this ETL.
+--
+-- Illustrative SQL outline (comments only, choose your own approach):
+--
+-- WITH some_cte AS (
+--     SELECT ...
+--     FROM ...
+-- )
+--
+-- INSERT INTO ft_param_city_month_location (
+--     month_key,
+--     city_key,
+--     param_key,
+--     locationtype_key,
+--     alertlevel_key,
+--     reading_count,
+--     data_volume_kb_sum,
+--     recordedvalue_sum,
+--     recordedvalue_min,
+--     recordedvalue_max,
+--     data_quality_sum,
+--     days_with_readings_count,
+--     alert_days_count,
+--     alert_reading_count,
+--     severe_alert_reading_count
+-- )
+-- SELECT
+--     ...
+-- FROM ...;
+--
+-- Replace the outline with your working SQL and rerun the notebook.

@@ -1,0 +1,13 @@
+id,typename,manufacturer,technology
+1001,"AQSense S100","Sensirion","Optical"
+1002,"AQSense S200","Sensirion","Optical"
+1003,"CleanAir Pro","Bosch","Laser"
+1004,"CleanAir Lite","Bosch","Laser"
+1005,"EnviroGuard Neo","Honeywell","Electrochemical"
+1006,"EnviroGuard Max","Honeywell","Electrochemical"
+1007,"EcoTrack","Other","Optical"
+1008,"NanoAir","Other","Electrochemical"
+1009,"PureSense","Bosch","Optical"
+1010,"SafeAir","Honeywell","Laser"
+1011,"MicroScan","Sensirion","Laser"
+1012,"CityBreathe","Sensirion","Electrochemical"

@@ -1,0 +1,5 @@
+id,alertname,colour,details
+1001,"Yellow","Yellow","Elevated level, possible concern for sensitive groups"
+1002,"Orange","Orange","Increased level, health effects possible for sensitive groups"
+1003,"Red","Red","High level, health effects possible for the general population"
+1004,"Crimson","Dark Red","Very high level, increased health risk for the general population"
