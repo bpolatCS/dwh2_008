@@ -1,28 +1,4 @@
--- Assignment 2 | ETL 06/06 | Fact-table ETL (STUDENT TODO)
--- Target: ft_param_city_month_location
---
--- ETL 01-05 are supplied and load the five dimensions during a full run.
--- Implement this SQL file yourself in DBeaver. Do not modify the supplied DDL.
---
--- Grain: one fact row per Month x City x Parameter x Location Type.
--- The monthly Peak Alert Level is a derived attribute, NOT part of this grain.
---
--- Your implementation must:
---   1. Read the relevant staging tables and classify individual readings
---      using the parameter-specific alert thresholds.
---   2. Aggregate readings and all fact measures at the specified grain.
---      Count DISTINCT calendar dates for the two day measures.
---   3. Determine each month's highest alert level, resolve the five
---      dimension keys, and insert the resulting fact rows.
---
--- Use unqualified table names only; the notebook supplies the search path.
--- Do not insert example/dummy rows into the warehouse.
---
--- This starter contains COMMENTS ONLY on purpose. The notebook creates your
--- assigned SQL question files and feasibility CSV on the first run, then
--- stops BEFORE resetting database schemas until you implement this ETL.
---
--- 1) One row per parameter with its four thresholds (Yellow, Orange, Red, Crimson)
+
 WITH param_thresholds AS (
     SELECT
         pa.paramid,
@@ -31,13 +7,10 @@ WITH param_thresholds AS (
         MAX(CASE WHEN a.alertname = 'Red'     THEN pa.threshold END) AS red_thr,
         MAX(CASE WHEN a.alertname = 'Crimson' THEN pa.threshold END) AS crimson_thr
     FROM tb_paramalert AS pa
-    JOIN tb_alert AS a
-        ON a.id = pa.alertid
+    JOIN tb_alert AS a ON a.id = pa.alertid
     GROUP BY pa.paramid
 ),
 
--- 2) Each individual reading with its grain attributes and alert rank
---    (None = 0, Yellow = 1, Orange = 2, Red = 3, Crimson = 4)
 classified_readings AS (
     SELECT
         EXTRACT(YEAR FROM r.readat)::INT * 100
@@ -57,13 +30,11 @@ classified_readings AS (
             ELSE 0
         END AS alert_rank
     FROM tb_readingevent AS r
-    JOIN tb_sensordevice AS sd
-        ON sd.id = r.sensordevid
+    INNER JOIN tb_sensordevice AS sd ON sd.id = r.sensordevid
     LEFT JOIN param_thresholds AS t
         ON t.paramid = r.paramid
 ),
 
--- 3) Aggregate to the fact grain: Month x City x Parameter x Location Type
 monthly_summary AS (
     SELECT
         month_key,
@@ -85,7 +56,6 @@ monthly_summary AS (
     GROUP BY month_key, cityid, paramid, locationtype
 )
 
--- 4) Resolve the five dimension keys and insert the fact rows
 INSERT INTO ft_param_city_month_location (
     month_key,
     city_key,
@@ -120,13 +90,12 @@ SELECT
     ms.alert_reading_count,
     ms.severe_alert_reading_count
 FROM monthly_summary AS ms
-JOIN tb_city    AS c  ON c.id  = ms.cityid
-JOIN tb_country AS co ON co.id = c.countryid
-JOIN tb_param   AS p  ON p.id  = ms.paramid
-JOIN dim_timemonth    AS tm ON tm.month_key     = ms.month_key
-JOIN dim_city         AS dc ON dc.country_name  = co.countryname
-                           AND dc.city_name     = c.cityname
-JOIN dim_param        AS dp ON dp.param_name    = p.paramname
-JOIN dim_locationtype AS dl ON dl.location_type = ms.locationtype
-JOIN dim_alertlevel   AS da ON da.alert_rank    = ms.peak_alert_rank
+LEFT JOIN tb_city    AS c  ON c.id  = ms.cityid
+LEFT JOIN tb_country AS co ON co.id = c.countryid
+LEFT JOIN tb_param   AS p  ON p.id  = ms.paramid
+LEFT JOIN dim_timemonth    AS tm ON tm.month_key = ms.month_key
+LEFT JOIN dim_city         AS dc ON dc.country_name = co.countryname AND dc.city_name = c.cityname
+LEFT JOIN dim_param        AS dp ON dp.param_name = p.paramname
+LEFT JOIN dim_locationtype AS dl ON dl.location_type = ms.locationtype
+LEFT JOIN dim_alertlevel   AS da ON da.alert_rank = ms.peak_alert_rank
 ORDER BY tm.month_key, dc.city_key, dp.param_key, dl.locationtype_key;
