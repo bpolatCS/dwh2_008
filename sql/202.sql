@@ -6,4 +6,28 @@
 -- Use unqualified table names; the notebook selects only the DWH2 schema.
 -- Place your SQL query below. Keep the comments above for reference.
 
-
+select 
+	case when grouping(c.city_name) = 1 then 'ALL CITIES' else c.city_name end as city_name,
+	dt.quarter_num,
+	case 
+		when grouping(c.city_name) = 1 and grouping(dt.quarter_num) = 1 then 'GRAND TOTAL'
+		when grouping(c.city_name) = 1 then 'CITY TOTAL'
+		when grouping(dt.quarter_num ) = 1 then 'QUARTER TOTAL'
+	else 'CITY-QUARTER' end row_level,
+	sum(ft.reading_count) as readings,
+	round(sum(ft.recordedvalue_sum) / sum(ft.reading_count),2) as average_o3_ppb,
+	sum(ft.alert_reading_count) as alert_reading,
+	round(100.0 * sum(ft.alert_reading_count ) / sum(ft.reading_count),2) as alert_pct
+from dwh2_008.ft_param_city_month_location ft 
+left join dwh2_008.dim_city c on c.city_key  = ft.city_key 
+left join dwh2_008.dim_timemonth dt on dt.month_key = ft.month_key
+left join dwh2_008.dim_locationtype dl on dl.locationtype_key = ft.locationtype_key 
+left join dwh2_008.dim_param dp  on dp.param_key = ft.param_key 
+where c.city_name in ('Paris','Lyon','Marseille')
+	and dp.param_name = 'O3'
+	and dt.year_num = 2024
+group by cube(c.city_name,dt.quarter_num)
+order by grouping(c.city_name),
+c.city_name,
+grouping(dt.quarter_num),
+dt.quarter_num
