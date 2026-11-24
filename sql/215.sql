@@ -27,9 +27,9 @@ from (
         sum(coalesce(sum(ft.alert_reading_count), 0)) over (
             partition by c.city_name order by dt.year_num, dt.month_num
             rows between 2 preceding and current row)  as alert_readings_3m
-    from dwh2_008.dim_city c
-    cross join dwh2_008.dim_timemonth dt
-    left join dwh2_008.ft_param_city_month_location ft on ft.city_key  = c.city_key and ft.month_key = dt.month_key
+    from dim_city c
+    cross join dim_timemonth dt
+    left join ft_param_city_month_location ft on ft.city_key  = c.city_key and ft.month_key = dt.month_key
     where c.city_name in ('Ankara', 'Istanbul')
       and ((dt.year_num = 2024 and dt.month_num >= 11) or dt.year_num = 2025)
     group by 
