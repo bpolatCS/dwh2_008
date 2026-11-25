@@ -26,8 +26,8 @@ select
 	count(case when in_urban = 1 then 1 end) as urban_parameters,
 	count(case when in_industrial = 1 then 1 end) as industrial_parameters,
 	count(case when in_urban = 1 and in_industrial = 1 then 1 end) as parameters_in_both
-from tbl ft 
-left join dim_city c on c.city_key  = ft.city_key 
+from dim_city c 
+left join tbl ft on c.city_key  = ft.city_key 
 where c.country_name in ('Austria','Germany','France','Hungary') 
 group by 1,2
-
+order by 1,2

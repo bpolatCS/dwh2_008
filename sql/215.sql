@@ -21,12 +21,8 @@ from (
         dt.month_num,
         coalesce(sum(ft.reading_count), 0)       as readings,
         coalesce(sum(ft.alert_reading_count), 0) as alert_readings,
-        sum(coalesce(sum(ft.reading_count), 0)) over (
-            partition by c.city_name order by dt.year_num, dt.month_num
-            rows between 2 preceding and current row)  as readings_3m,
-        sum(coalesce(sum(ft.alert_reading_count), 0)) over (
-            partition by c.city_name order by dt.year_num, dt.month_num
-            rows between 2 preceding and current row)  as alert_readings_3m
+        sum(coalesce(sum(ft.reading_count), 0)) over (partition by c.city_name order by dt.year_num, dt.month_num rows between 2 preceding and current row)  as readings_3m,
+        sum(coalesce(sum(ft.alert_reading_count), 0)) over (partition by c.city_name order by dt.year_num, dt.month_num rows between 2 preceding and current row)  as alert_readings_3m
     from dim_city c
     cross join dim_timemonth dt
     left join ft_param_city_month_location ft on ft.city_key  = c.city_key and ft.month_key = dt.month_key

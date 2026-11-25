@@ -11,18 +11,18 @@ select
 	dt.quarter_num,
 	case 
 		when grouping(c.city_name) = 1 and grouping(dt.quarter_num) = 1 then 'GRAND TOTAL'
-		when grouping(c.city_name) = 1 then 'CITY TOTAL'
-		when grouping(dt.quarter_num ) = 1 then 'QUARTER TOTAL'
+		when grouping(c.city_name) = 1 then 'QAURTER TOTAL'
+		when grouping(dt.quarter_num ) = 1 then 'CITY TOTAL'
 	else 'CITY-QUARTER' end row_level,
 	sum(ft.reading_count) as readings,
 	round(sum(ft.recordedvalue_sum) / sum(ft.reading_count),2) as average_o3_ppb,
-	sum(ft.alert_reading_count) as alert_reading,
+	sum(ft.alert_reading_count) as alert_readings,
 	round(100.0 * sum(ft.alert_reading_count ) / sum(ft.reading_count),2) as alert_pct
-from ft_param_city_month_location ft 
-left join dim_city c on c.city_key  = ft.city_key 
-left join dim_timemonth dt on dt.month_key = ft.month_key
-left join dim_locationtype dl on dl.locationtype_key = ft.locationtype_key 
-left join dim_param dp  on dp.param_key = ft.param_key 
+from dwh2_008.ft_param_city_month_location ft 
+left join dwh2_008.dim_city c on c.city_key  = ft.city_key 
+left join dwh2_008.dim_timemonth dt on dt.month_key = ft.month_key
+left join dwh2_008.dim_locationtype dl on dl.locationtype_key = ft.locationtype_key 
+left join dwh2_008.dim_param dp  on dp.param_key = ft.param_key 
 where c.city_name in ('Paris','Lyon','Marseille')
 	and dp.param_name = 'O3'
 	and dt.year_num = 2024
@@ -31,3 +31,4 @@ order by grouping(c.city_name),
 c.city_name,
 grouping(dt.quarter_num),
 dt.quarter_num
+
