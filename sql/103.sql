@@ -12,7 +12,7 @@ select
 	c.city_name,
 	dl.location_type,
 	dt.year_num,
-	sum(days_in_month) as y,
+	sum(ft.days_with_readings_count) as monitored_days,
 	round(100.0 * sum(ft.days_with_readings_count) / sum(days_in_month),2) as coverage_pct,
 	round(100.0 * sum(ft.alert_days_count) / sum(ft.days_with_readings_count),2) as alert_day_pct 	
 from ft_param_city_month_location ft

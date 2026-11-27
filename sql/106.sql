@@ -11,10 +11,10 @@ select
 	c.city_name,
 	dl.location_type,
 	sum(ft.reading_count) as readings,
-	sum(ft.alert_days_count) as alert_reading,
-	round(100.0 * sum(ft.alert_days_count) / sum(reading_count),2)as alert_pct,
-	sum(severe_alert_reading_count ) as severe_alert_readings,
-	round(100.0 * sum(ft.severe_alert_reading_count ) / sum(reading_count),2)as severe_alert_pct
+	sum(ft.alert_reading_count) as alert_readings,
+	round(100.0 * sum(ft.alert_reading_count) / sum(ft.reading_count),2)as alert_pct,
+	sum(ft.severe_alert_reading_count ) as severe_alert_readings,
+	round(100.0 * sum(ft.severe_alert_reading_count ) / sum(ft.reading_count),2)as severe_alert_pct
 from ft_param_city_month_location ft
 left join dim_city c on c.city_key  = ft.city_key 
 left join dim_timemonth dt on dt.month_key = ft.month_key

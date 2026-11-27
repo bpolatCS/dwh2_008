@@ -20,12 +20,12 @@ select
 	    else 'MONTH'
 	end as row_level,
 	sum(ft.reading_count) as readings,
-	round(sum(ft.recordedvalue_sum) / sum(ft.reading_count),2) as average_pm10_mcg_m3
-from dwh2_008.ft_param_city_month_location ft 
-left join dwh2_008.dim_city c on c.city_key  = ft.city_key 
-left join dwh2_008.dim_timemonth dt on dt.month_key = ft.month_key
-left join dwh2_008.dim_locationtype dl on dl.locationtype_key = ft.locationtype_key 
-left join dwh2_008.dim_param dp  on dp.param_key = ft.param_key 
+	round(sum(ft.recordedvalue_sum) / sum(ft.reading_count),2) as avg_pm10_mcg_m3
+from ft_param_city_month_location ft 
+left join dim_city c on c.city_key  = ft.city_key 
+left join dim_timemonth dt on dt.month_key = ft.month_key
+left join dim_locationtype dl on dl.locationtype_key = ft.locationtype_key 
+left join dim_param dp  on dp.param_key = ft.param_key 
 where c.country_name  in ('Italy')
 	and dp.param_name = 'PM10'
 	and dt.year_num in (2024,2025)
